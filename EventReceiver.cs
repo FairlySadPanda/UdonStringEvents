@@ -5,11 +5,12 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 
-class EventReceiver : UdonSharpBehaviour
+public class EventReceiver : UdonSharpBehaviour
 {
     public GameObject[] emitters;
+    public UdonLogger logger;
 
-    public void FixedUpdate()
+    public void Update()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -17,7 +18,7 @@ class EventReceiver : UdonSharpBehaviour
             string newEv = emitter.GetNewEvent();
             if (newEv != "")
             {
-                HandleUpdate(newEv);
+                HandleUpdate(emitter.GetCharacterName(), newEv);
             }
         }
     }
@@ -36,13 +37,17 @@ class EventReceiver : UdonSharpBehaviour
         return null;
     }
 
-    private void HandleUpdate(string eventString)
+    private void HandleUpdate(string characterName, string eventString)
     {
         string[] e = eventString.Split(',');
+        Debug.Log("Got an event named " + e[0] + "with payload " + eventString);
         switch (e[0])
         {
-            case "DebugLog":
-                Debug.Log(e[1]);
+            case "ChatMessage":
+                logger.Notice(characterName + ": " + e[1]);
+                break;
+            default:
+                logger.Notice("Got an event named " + e[0] + " but didn't know what to do with it.");
                 break;
         }
     }
@@ -54,7 +59,6 @@ class EventReceiver : UdonSharpBehaviour
             GameObject emitter = GetEmitter("");
             ((EventEmitter)emitter.GetComponent(typeof(UdonBehaviour))).SetCharacterName(player.displayName);
         }
-
     }
 
     public override void OnPlayerLeft(VRCPlayerApi player)

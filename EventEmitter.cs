@@ -6,7 +6,7 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 
-class EventEmitter : UdonSharpBehaviour
+public class EventEmitter : UdonSharpBehaviour
 {
     [UdonSynced]
     private string characterName;
@@ -35,7 +35,7 @@ class EventEmitter : UdonSharpBehaviour
 
     public void SetNewEvent(string eventName, string payload)
     {
-        // TODO: Don't allow sending strings over a given length.
+        Debug.Log("Sending event: " + eventName + ": " + payload);
         newEvent = eventName + "," + payload;
     }
 

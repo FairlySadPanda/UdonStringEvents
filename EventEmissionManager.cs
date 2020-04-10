@@ -6,31 +6,37 @@ using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
 
-class EventEmissionManager : UdonSharpBehaviour
+public class EventEmissionManager : UdonSharpBehaviour
 {
     public EventReceiver receiver;
     private EventEmitter emitter;
-    private bool awaitClaim;
 
     private int clock;
 
     public void Start()
     {
         clock = 0;
-        awaitClaim = true;
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
-        if (awaitClaim)
+        if (emitter == null)
         {
-            GameObject ownedEmitter = receiver.GetEmitter(Networking.LocalPlayer.displayName);
+            string displayName = "";
+            GameObject ownedEmitter = null;
+
+            if (Networking.LocalPlayer != null)
+            {
+                displayName = Networking.LocalPlayer.displayName;
+            }
+
+            ownedEmitter = receiver.GetEmitter(displayName);
+
             if (ownedEmitter != null)
             {
                 Debug.Log("Emitter object has arrived in our care.");
                 Networking.SetOwner(Networking.LocalPlayer, ownedEmitter);
                 emitter = (EventEmitter)ownedEmitter.GetComponent(typeof(UdonBehaviour));
-                awaitClaim = false;
             }
         }
     }
@@ -39,15 +45,15 @@ class EventEmissionManager : UdonSharpBehaviour
     {
         if (emitter == null)
         {
-            Debug.Log("emitter was null, could not handle " + eventName + "event");
+            Debug.Log("emitter was null, could not handle " + eventName + " event");
             return;
         }
 
         emitter.SetNewEvent(eventName, eventPayload);
     }
 
-    public void SendHelloWorld()
+    public void SendChatMessage(string message)
     {
-        SendEvent("DebugLog", "Hello World! " + clock++);
+        SendEvent("ChatMessage", message);
     }
 }

@@ -11,7 +11,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon;
-using TMPro;
 using VRC.Udon.Common.Interfaces;
 
 public class UdonLogger : UdonSharpBehaviour
@@ -37,10 +36,6 @@ public class UdonLogger : UdonSharpBehaviour
     // private string latestInfo;
     // private string lastInfo;
 
-    [UdonSynced]
-    private string latestNotice;
-    private string lastNotice;
-
     private int maxNumberOfLogLines;
     private GameObject[] logs;
 
@@ -50,54 +45,19 @@ public class UdonLogger : UdonSharpBehaviour
 
     void Start()
     {
-        Hide();
-        latestNotice = "";
-        lastNotice = "";
+        //Hide();
         count = 0;
         maxNumberOfLogLines = 5;
         logs = new GameObject[maxNumberOfLogLines];
     }
 
-    void Update()
+    public void Update()
     {
         // if (Networking.LocalPlayer != null)
         // {
         //     playerUI.transform.position = Networking.LocalPlayer.GetBonePosition(HumanBodyBones.RightHand);
         //     playerUI.transform.rotation = Networking.LocalPlayer.GetBoneRotation(HumanBodyBones.RightHand);
         // }
-
-        if (latestNotice != lastNotice)
-        {
-            if (logs[4] != null)
-            {
-                Destroy(logs[4]);
-                logs[4] = null;
-            }
-
-            for (int i = maxNumberOfLogLines - 2; i > -1; i--)
-            {
-                if (logs[i] != null)
-                {
-                    RectTransform logTrans = logs[i].GetComponent<RectTransform>();
-                    logTrans.anchoredPosition3D = new Vector3(0, logTrans.anchoredPosition3D.y + 200, -1);
-                    logs[i + 1] = logs[i];
-                }
-            }
-
-            GameObject newLog = VRCInstantiate(logLinePrefab);
-            Text text = newLog.GetComponent<Text>();
-            text.text = latestNotice;
-
-            logs[0] = newLog;
-            newLog.transform.SetParent(logScreen.transform);
-
-            RectTransform transform = newLog.GetComponent<RectTransform>();
-            transform.anchoredPosition3D = new Vector3(0, 100, -1);
-            transform.localRotation = new Quaternion();
-            transform.localScale = new Vector3(1, 1, 1);
-
-            lastNotice = latestNotice;
-        }
     }
 
     public void Toggle()
@@ -124,23 +84,41 @@ public class UdonLogger : UdonSharpBehaviour
         isActive = true;
     }
 
-    // public void Error(string log)
-    // {
-    //     latestError = log;
-    // }
-
-    // public void Warning(string log)
-    // {
-    //     latestWarning = log;
-    // }
-
-    // public void Info(string log)
-    // {
-    //     latestInfo = log;
-    // }
-
     public void Notice(string log)
     {
-        latestNotice = log;
+        Debug.Log("Updating log to say: " + log);
+        UpdateLog(log);
+    }
+
+
+    private void UpdateLog(string logString)
+    {
+        if (logs[4] != null)
+        {
+            Destroy(logs[4]);
+            logs[4] = null;
+        }
+
+        for (int i = maxNumberOfLogLines - 2; i > -1; i--)
+        {
+            if (logs[i] != null)
+            {
+                RectTransform logTrans = logs[i].GetComponent<RectTransform>();
+                logTrans.anchoredPosition3D = new Vector3(0, logTrans.anchoredPosition3D.y + 200, -1);
+                logs[i + 1] = logs[i];
+            }
+        }
+
+        GameObject newLog = VRCInstantiate(logLinePrefab);
+        Text text = newLog.GetComponent<Text>();
+        text.text = logString;
+
+        logs[0] = newLog;
+        newLog.transform.SetParent(logScreen.transform);
+
+        RectTransform transform = newLog.GetComponent<RectTransform>();
+        transform.anchoredPosition3D = new Vector3(0, 300, -1);
+        transform.localRotation = new Quaternion();
+        transform.localScale = new Vector3(1, 1, 1);
     }
 }

@@ -6,51 +6,34 @@ using VRC.Udon.Common.Interfaces;
 using UnityEngine.UI;
 
 ///<Summary>The manager for a keyboard.</Summary>
-public class KeyboardManager : UdonSharpBehaviour
+public class InWorldKeyboardManager : UdonSharpBehaviour
 {
-    ///<Summary>The anchor on this keyboard for putting a Logger on it.</Summary>
-    public GameObject keyboardAnchor;
-    ///<Summary>The root of a Logger, used for anchoring it to the keyboard.</Summary>
-    public UdonLogger logScreen;
-    ///<Summary>The default anchor location for the Logger.</Summary>
-    public GameObject logScreenAnchor;
+    public string kName;
     ///<Summary>The input field for this keyboard.</Summary>
     public InputField input;
     ///<Summary>All the keyboard keys this keyboard has.</Summary>
     public KeyboardKey[] keys;
     ///<Summary>The shift key for this keyboard.</Summary>
     public ShiftKey shiftKey;
+    ///<Summary>The Character Freeze button for this keyboard.</Summary>
+    public InWorldImmobilizeToggleKey immobilizeToggle;
+
+    public GameObject root;
+
+    public int maxStringLength;
 
     private bool caps;
     private bool shift;
     private bool visible;
 
-    public void Start()
-    {
-        gameObject.SetActive(false);
-    }
-
-    public void Update()
-    {
-        VRCPlayerApi player = Networking.LocalPlayer;
-        if (player != null)
-        {
-            gameObject.transform.position = player.GetBonePosition(HumanBodyBones.Spine);
-            gameObject.transform.rotation = player.GetBoneRotation(HumanBodyBones.Spine);
-
-            // If the keyboard is active, the log screen should sit above the keyboard.
-            if (gameObject.activeSelf)
-            {
-                logScreen.transform.position = keyboardAnchor.transform.position;
-                logScreen.transform.rotation = keyboardAnchor.transform.rotation;
-                logScreen.transform.localScale = new Vector3(2, 2, 2);
-            }
-        }
-    }
-
     ///<Summary>Send a key's character to the keyboard. Deactivate shift if it's on.</Summary>
     public void SendKey(string character)
     {
+        if (input.text.Length >= maxStringLength)
+        {
+            return;
+        }
+
         input.text += character;
 
         if (shift)
@@ -113,18 +96,19 @@ public class KeyboardManager : UdonSharpBehaviour
         }
     }
 
-    ///<Summary>Toggle the keyboard on or off.</Summary>
-    public void Toggle()
+    public void EnableKeyboard()
     {
-        gameObject.SetActive(!gameObject.activeSelf);
+        Debug.Log(kName + " keyboard enabled");
+        root.SetActive(true);
+        immobilizeToggle.Deactivate();
+    }
 
-        if (gameObject.activeSelf)
-        {
-            logScreen.Anchor();
-            return;
-        }
-
-        logScreen.Unanchor();
+    ///<Summary>Toggle the keyboard on or off.</Summary>
+    public void DisableKeyboard()
+    {
+        Debug.Log(kName + " keyboard disabled");
+        root.SetActive(false);
+        immobilizeToggle.Deactivate();
     }
 
     private void SetKeysUpper()

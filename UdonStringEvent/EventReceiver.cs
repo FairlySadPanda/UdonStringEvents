@@ -14,6 +14,20 @@ public class EventReceiver : UdonSharpBehaviour
     /// <Summary>A logger that events can be output to. This is optional.</Summary>
     public UdonLogger logger;
 
+    public GameObject master;
+
+    [UdonSynced]
+    private bool gameIsNotInProgress;
+    private bool lateJoiner;
+
+    public void Start()
+    {
+        if (Networking.LocalPlayer != null && Networking.LocalPlayer.IsOwner(gameObject))
+        {
+            gameIsNotInProgress = true;
+        }
+    }
+
     public void Update()
     {
         for (int i = 0; i < emitters.Length; i++)
@@ -47,6 +61,12 @@ public class EventReceiver : UdonSharpBehaviour
 
     private void HandleUpdate(string characterName, string eventString)
     {
+        bool ownerOfGame = true;
+        if (Networking.LocalPlayer != null)
+        {
+            ownerOfGame = Networking.LocalPlayer.IsOwner(master);
+        }
+
         // As it stands, hard-code your events in this function.
         // This is pretty basic. Once maps and lists exist in Udon, this can be improved.
         string[] e = eventString.Split(',');

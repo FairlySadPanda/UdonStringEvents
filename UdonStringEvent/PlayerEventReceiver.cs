@@ -10,6 +10,7 @@ public class PlayerEventReceiver : UdonSharpBehaviour
 {
     /// <Summary>An array of all Emitters in the system.</Summary>
     public PlayerEventEmitter[] emitters;
+    public UdonBehaviour handler;
 
     private string characterName;
 
@@ -77,15 +78,8 @@ public class PlayerEventReceiver : UdonSharpBehaviour
 
     private void HandleUpdate(string characterName, string eventString)
     {
-        // As it stands, hard-code your events in this function.
-        // This is pretty basic. Once maps and lists exist in Udon, this can be improved.
-        string[] e = eventString.Split(',');
-        Debug.Log("Got an event for player " + characterName + " named " + e[0] + " with payload " + eventString);
-        switch (e[0])
-        {
-            default:
-                Debug.Log("Got an event called " + e[0] + " but I don't know what to do with it.");
-                break;
-        }
+        handler.SetProgramVariable("characterName", characterName);
+        handler.SetProgramVariable("newEvent", eventString);
+        handler.SendCustomEvent("Handle");
     }
 }

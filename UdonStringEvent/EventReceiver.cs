@@ -10,23 +10,7 @@ public class EventReceiver : UdonSharpBehaviour
 {
     /// <Summary>An array of all Emitters in the system.</Summary>
     public GameObject[] emitters;
-
-    /// <Summary>A logger that events can be output to. This is optional.</Summary>
-    public UdonLogger logger;
-
-    public GameObject master;
-
-    [UdonSynced]
-    private bool gameIsNotInProgress;
-    private bool lateJoiner;
-
-    public void Start()
-    {
-        if (Networking.LocalPlayer != null && Networking.LocalPlayer.IsOwner(gameObject))
-        {
-            gameIsNotInProgress = true;
-        }
-    }
+    public UdonBehaviour handler;
 
     public void Update()
     {
@@ -61,28 +45,9 @@ public class EventReceiver : UdonSharpBehaviour
 
     private void HandleUpdate(string characterName, string eventString)
     {
-        bool ownerOfGame = true;
-        if (Networking.LocalPlayer != null)
-        {
-            ownerOfGame = Networking.LocalPlayer.IsOwner(master);
-        }
-
-        // As it stands, hard-code your events in this function.
-        // This is pretty basic. Once maps and lists exist in Udon, this can be improved.
-        string[] e = eventString.Split(',');
-        Debug.Log("Got an event named " + e[0] + " with payload " + eventString);
-        switch (e[0])
-        {
-            case "ChatMessage":
-                string message = characterName + ": " + e[1];
-                message = message.Replace("|", ",");
-                Debug.Log("Notice: " + message);
-                logger.Notice(message);
-                break;
-            default:
-                logger.Notice("Got an event named " + e[0] + " but didn't know what to do with it.");
-                break;
-        }
+        handler.SetProgramVariable("characterName", characterName);
+        handler.SetProgramVariable("newEvent", eventString);
+        handler.SendCustomEvent("Handle");
     }
 
     /// <Summary>Get an empty emitter and assign it to the new player.</Summary>

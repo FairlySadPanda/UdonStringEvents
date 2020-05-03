@@ -37,7 +37,9 @@ public class KeyboardManager : UdonSharpBehaviour
         VRCPlayerApi player = Networking.LocalPlayer;
         if (player != null)
         {
-            gameObject.transform.position = player.GetPosition();
+            Vector3 pos = player.GetPosition();
+            pos.y = player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position.y - 1.7F;
+            gameObject.transform.position = pos;
 
             // If the keyboard is active, the log screen should sit above the keyboard.
             if (gameObject.activeSelf)

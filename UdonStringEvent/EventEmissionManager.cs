@@ -45,7 +45,7 @@ public class EventEmissionManager : UdonSharpBehaviour
         // For the time being a good modification might be to change SendEvent to return a bool.
 
         // This can be bad in two ways: either the return is null or the return is not owned.
-        GameObject emitter = receiver.GetEmitter(displayName);
+        var emitter = receiver.GetEmitter(displayName);
         if (emitter == null)
         {
             Debug.Log("emitter was null: could not handle " + eventName + " event");
@@ -60,17 +60,17 @@ public class EventEmissionManager : UdonSharpBehaviour
             return;
         }
 
-        emitter.GetComponent<EventEmitter>().SetNewEvent(eventName, eventPayload);
+        emitter.SetNewEvent(eventName, eventPayload);
     }
 
     private void GetEmitter()
     {
-        GameObject emitter = receiver.GetEmitter(displayName);
+        var emitter = receiver.GetEmitter(displayName);
 
         if (emitter != null)
         {
             Debug.Log("Emitter object has arrived in our care.");
-            Networking.SetOwner(Networking.LocalPlayer, emitter);
+            Networking.SetOwner(Networking.LocalPlayer, emitter.gameObject);
             gotEmitter = true;
         }
     }

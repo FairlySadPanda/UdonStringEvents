@@ -12,14 +12,11 @@ public class EventReceiver : UdonSharpBehaviour
     public GameObject[] emitters;
     public UdonBehaviour handler;
 
-    public void Update()
+    void Update()
     {
-        for (int i = 0; i < emitters.Length; i++)
+        foreach (var emitter in emitters)
         {
-            // UdonSharp limitation - this can be refactored once the generic is handled correctly.
-            EventEmitter emitter = ((EventEmitter)emitters[i].GetComponent(typeof(UdonBehaviour)));
             string newEv = emitter.GetNewEvent();
-
             // GetNewEvent returns either a nil event (empty string) or an event.
             if (newEv != "")
             {
@@ -28,19 +25,22 @@ public class EventReceiver : UdonSharpBehaviour
         }
     }
 
-    /// <Summary>Retrieve an Emitter if one is found that belongs to the provied character name, or null if one isn't.</Summary>
-    public GameObject GetEmitter(string characterName)
+    /// <Summary>Get an empty emitter and assign it to the new player.</Summary>
+    override void OnPlayerJoined(VRCPlayerApi player)
     {
-        for (int i = 0; i < emitters.Length; i++)
+        if (Networking.IsOwner(gameObject))
         {
-            if (emitters[i].GetComponent<EventEmitter>().GetCharacterName() == characterName)
-            {
-                Debug.Log("Returning emitter with index " + i + " to requester");
-                return emitters[i];
-            }
+            GetEmitter("").SetCharacterName(player.displayName);
         }
+    }
 
-        return null;
+    /// <Summary>Get the player's emitter and assign it to nobody.</Summary>
+    override void OnPlayerLeft(VRCPlayerApi player)
+    {
+        if (Networking.IsOwner(gameObject))
+        {
+            GetEmitter(player.displayName).SetCharacterName("");
+        }
     }
 
     private void HandleUpdate(string characterName, string eventString)
@@ -50,23 +50,18 @@ public class EventReceiver : UdonSharpBehaviour
         handler.SendCustomEvent("Handle");
     }
 
-    /// <Summary>Get an empty emitter and assign it to the new player.</Summary>
-    public override void OnPlayerJoined(VRCPlayerApi player)
-    {
-        if (Networking.IsOwner(gameObject))
-        {
-            GameObject emitter = GetEmitter("");
-            ((EventEmitter)emitter.GetComponent(typeof(UdonBehaviour))).SetCharacterName(player.displayName);
-        }
-    }
 
-    /// <Summary>Get the player's emitter and assign it to nobody.</Summary>
-    public override void OnPlayerLeft(VRCPlayerApi player)
+    /// <Summary>Retrieve an Emitter if one is found that belongs to the provied character name, or null if one isn't.</Summary>
+    private EventEmitter GetEmitter(string characterName)
     {
-        if (Networking.IsOwner(gameObject))
+        foreach (var emitter in emitters)
         {
-            GameObject emitter = GetEmitter(player.displayName);
-            ((EventEmitter)emitter.GetComponent(typeof(UdonBehaviour))).SetCharacterName("");
+            if (emitter.GetCharacterName() == characterName)
+            {
+                return emitter;
+            }
         }
+
+        return null;
     }
 }

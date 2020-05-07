@@ -20,6 +20,8 @@ public class KeyboardManager : UdonSharpBehaviour
     public KeyboardKey[] keys;
     ///<Summary>The shift key for this keyboard.</Summary>
     public ShiftKey shiftKey;
+    ///<Summary>The caps key for this keyboard.</Summary>
+    public CapsLockKey capsLockKey;
     ///<Summary>The Character Freeze button for this keyboard.</Summary>
     public ImmobilizeToggleKey immobilizeToggle;
 
@@ -63,12 +65,11 @@ public class KeyboardManager : UdonSharpBehaviour
     public void SendKey(string character)
     {
         input.text += character;
-        shift = false;
-
         if (shift)
         {
             shiftKey.PressKey();
         }
+        shift = false;
     }
 
     ///<Summary>Set caps to ON. Shift the keys to upper case if shift isn't on.</Summary>
@@ -134,6 +135,8 @@ public class KeyboardManager : UdonSharpBehaviour
 
         logScreen.Unanchor();
         immobilizeToggle.Deactivate();
+        capsLockKey.Deactivate();
+        shiftKey.Deactivate();
     }
 
     private void SetKeysUpper()

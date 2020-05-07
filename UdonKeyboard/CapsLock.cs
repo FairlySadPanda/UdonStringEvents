@@ -15,14 +15,19 @@ public class CapsLockKey : UdonSharpBehaviour
     {
         if (toggle)
         {
-            manager.CapsOff();
-            toggle = false;
-            buttonImage.color = Color.white;
+            Deactivate();
             return;
         }
 
         manager.CapsOn();
         toggle = true;
         buttonImage.color = Color.blue;
+    }
+
+    public void Deactivate()
+    {
+        manager.CapsOff();
+        toggle = false;
+        buttonImage.color = Color.white;
     }
 }

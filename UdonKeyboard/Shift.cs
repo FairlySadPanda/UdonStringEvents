@@ -15,14 +15,19 @@ public class ShiftKey : UdonSharpBehaviour
     {
         if (toggle)
         {
-            manager.ShiftOff();
-            toggle = false;
-            buttonImage.color = Color.white;
+            Deactivate();
             return;
         }
 
         manager.ShiftOn();
         toggle = true;
         buttonImage.color = Color.blue;
+    }
+
+    public void Deactivate()
+    {
+        manager.ShiftOff();
+        toggle = false;
+        buttonImage.color = Color.white;
     }
 }

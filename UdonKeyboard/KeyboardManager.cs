@@ -65,11 +65,11 @@ public class KeyboardManager : UdonSharpBehaviour
     public void SendKey(string character)
     {
         input.text += character;
+
         if (shift)
         {
             shiftKey.PressKey();
         }
-        shift = false;
     }
 
     ///<Summary>Set caps to ON. Shift the keys to upper case if shift isn't on.</Summary>
@@ -83,7 +83,6 @@ public class KeyboardManager : UdonSharpBehaviour
     public void CapsOff()
     {
         caps = false;
-
         if (!shift)
         {
             SetKeysLower();
@@ -101,7 +100,6 @@ public class KeyboardManager : UdonSharpBehaviour
     public void ShiftOff()
     {
         shift = false;
-
         if (!caps)
         {
             SetKeysLower();

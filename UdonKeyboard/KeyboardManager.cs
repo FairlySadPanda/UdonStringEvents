@@ -26,7 +26,6 @@ public class KeyboardManager : UdonSharpBehaviour
     private bool caps;
     private bool shift;
     private bool visible;
-    private Vector3 pos;
 
     public void Start()
     {
@@ -38,8 +37,16 @@ public class KeyboardManager : UdonSharpBehaviour
         VRCPlayerApi player = Networking.LocalPlayer;
         if (player != null)
         {
-            pos = player.GetPosition();
-            pos.y = player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position.y - 1.7F;
+            // Be aware that if you're using GotoUdon -- which you should, as it's ace -- it will break here if you have avatar emulation on.
+            var lowestPossibleYPos = Vector3.Lerp(player.GetBonePosition(HumanBodyBones.LeftFoot), player.GetBonePosition(HumanBodyBones.RightFoot), 0.5f).y - 1f;
+            var newPos = player.GetTrackingData(VRCPlayerApi.TrackingDataType.Head).position.y - 1.7F;
+            if (lowestPossibleYPos > newPos)
+            {
+                newPos = lowestPossibleYPos;
+            }
+
+            var pos = player.GetPosition();
+            pos.y = newPos;
             gameObject.transform.position = pos;
 
             // If the keyboard is active, the log screen should sit above the keyboard.

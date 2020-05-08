@@ -12,8 +12,37 @@ public class EventReceiver : UdonSharpBehaviour
     public GameObject[] emitters;
     public UdonBehaviour handler;
 
+    private int clock;
+    private string displayName;
+    private EventEmitter emitter;
+
+    public void Start()
+    {
+        clock = 0;
+        displayName = "";
+
+        if (Networking.LocalPlayer != null)
+        {
+            displayName = Networking.LocalPlayer.displayName;
+        }
+
+    }
+
     void Update()
     {
+        if (emitter == null)
+        {
+            emitter = GetEmitter();
+
+            if (emitter != null)
+            {
+                Debug.Log("Emitter object has arrived in our care.");
+                Networking.SetOwner(Networking.LocalPlayer, emitter.gameObject);
+            }
+
+            //TODO: If gotemitter is false for a long time (5 seconds?) panic and alert the receiver that a reallocation has to happen.
+        }
+
         foreach (var emitter in emitters)
         {
             string newEv = emitter.GetNewEvent();
@@ -23,6 +52,41 @@ public class EventReceiver : UdonSharpBehaviour
                 HandleUpdate(emitter.GetCharacterName(), newEv);
             }
         }
+    }
+
+    ///<Summary>Send a string event to all other players in the world.</Summary>
+    public void SendEvent(string eventName, string eventPayload)
+    {
+        // An extension to this system might queue up events in the instance that we want to make sure they're sent on world load.
+        // For the time being a good modification might be to change SendEvent to return a bool.
+
+        // This can be bad in two ways: either the return is null or the return is not owned.
+        if (emitter == null)
+        {
+            Debug.Error("emitter was null: could not handle " + eventName + " event");
+            return;
+        }
+
+        if (!Networking.IsOwner(emitter.gameObject))
+        {
+            Debug.Error("emitter not owned by player: could not handle " + eventName + " event");
+            return;
+        }
+
+        emitter.SetNewEvent(eventName, eventPayload);
+    }
+
+    private EventEmitter GetEmitter(string name)
+    {
+        foreach (var possibleEmitter in emitters)
+        {
+            if (possibleEmitter.GetCharacterName() == name)
+            {
+                return possibleEmitter;
+            }
+        }
+
+        return null;
     }
 
     /// <Summary>Get an empty emitter and assign it to the new player.</Summary>
@@ -48,20 +112,5 @@ public class EventReceiver : UdonSharpBehaviour
         handler.SetProgramVariable("characterName", characterName);
         handler.SetProgramVariable("newEvent", eventString);
         handler.SendCustomEvent("Handle");
-    }
-
-
-    /// <Summary>Retrieve an Emitter if one is found that belongs to the provied character name, or null if one isn't.</Summary>
-    private EventEmitter GetEmitter(string characterName)
-    {
-        foreach (var emitter in emitters)
-        {
-            if (emitter.GetCharacterName() == characterName)
-            {
-                return emitter;
-            }
-        }
-
-        return null;
     }
 }

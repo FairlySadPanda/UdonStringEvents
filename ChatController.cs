@@ -8,6 +8,11 @@ using UnityEngine.UI;
 ///<Summary>A controller for a button that will convert the product of an InputField to a ChatMessage event.</Summary>
 public class ChatController : UdonSharpBehaviour
 {
+    ///<Summary>The text input field for this controller.</Summary>
+    public InputField input;
+    ///<Summary>The manager we want to handle chat events.</Summary>
+    public EventEmissionManager manager;
+
     public string[] badWords;
     private int maxMessageLength;
 
@@ -15,12 +20,6 @@ public class ChatController : UdonSharpBehaviour
     {
         maxMessageLength = 50;
     }
-
-
-    ///<Summary>The text input field for this controller.</Summary>
-    public InputField input;
-    ///<Summary>The manager we want to handle chat events.</Summary>
-    public EventEmissionManager manager;
 
     ///<Summary>Send a ChatMessage using the product of an InputField.</Summary>
     public void SendMessage()

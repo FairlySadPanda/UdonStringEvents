@@ -9,7 +9,7 @@ using VRC.Udon.Common.Interfaces;
 public class EventReceiver : UdonSharpBehaviour
 {
     /// <Summary>An array of all Emitters in the system.</Summary>
-    public GameObject[] emitters;
+    public EventEmitter[] emitters;
     public UdonBehaviour handler;
 
     private int clock;
@@ -32,7 +32,7 @@ public class EventReceiver : UdonSharpBehaviour
     {
         if (emitter == null)
         {
-            emitter = GetEmitter();
+            emitter = GetEmitter(displayName);
 
             if (emitter != null)
             {
@@ -63,13 +63,13 @@ public class EventReceiver : UdonSharpBehaviour
         // This can be bad in two ways: either the return is null or the return is not owned.
         if (emitter == null)
         {
-            Debug.Error("emitter was null: could not handle " + eventName + " event");
+            Debug.LogError("emitter was null: could not handle " + eventName + " event");
             return;
         }
 
         if (!Networking.IsOwner(emitter.gameObject))
         {
-            Debug.Error("emitter not owned by player: could not handle " + eventName + " event");
+            Debug.LogError("emitter not owned by player: could not handle " + eventName + " event");
             return;
         }
 
@@ -90,7 +90,7 @@ public class EventReceiver : UdonSharpBehaviour
     }
 
     /// <Summary>Get an empty emitter and assign it to the new player.</Summary>
-    override void OnPlayerJoined(VRCPlayerApi player)
+    public override void OnPlayerJoined(VRCPlayerApi player)
     {
         if (Networking.IsOwner(gameObject))
         {
@@ -99,7 +99,7 @@ public class EventReceiver : UdonSharpBehaviour
     }
 
     /// <Summary>Get the player's emitter and assign it to nobody.</Summary>
-    override void OnPlayerLeft(VRCPlayerApi player)
+    public override void OnPlayerLeft(VRCPlayerApi player)
     {
         if (Networking.IsOwner(gameObject))
         {

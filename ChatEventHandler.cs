@@ -16,12 +16,6 @@ public class ChatEventHandler : UdonSharpBehaviour
 
     public void Handle()
     {
-        bool ownerOfGame = true;
-        if (Networking.LocalPlayer != null)
-        {
-            ownerOfGame = Networking.LocalPlayer.IsOwner(gameObject);
-        }
-
         // As it stands, hard-code your events in this function.
         // This is pretty basic. Once maps and lists exist in Udon, this can be improved.
         string[] e = newEvent.Split(',');
@@ -38,5 +32,4 @@ public class ChatEventHandler : UdonSharpBehaviour
                 break;
         }
     }
-
 }

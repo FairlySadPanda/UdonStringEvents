@@ -118,6 +118,11 @@ public class KeyboardManager : UdonSharpBehaviour
     ///<Summary>Toggle the keyboard on or off.</Summary>
     public void Toggle()
     {
+        if (input.isFocused)
+        {
+            return;
+        }
+
         gameObject.SetActive(!gameObject.activeSelf);
 
         if (gameObject.activeSelf)

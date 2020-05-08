@@ -10,17 +10,10 @@ public class KeyEventListener : UdonSharpBehaviour
     public KeyboardManager keyboard;
     public UdonLogger logger;
 
-    private bool isFrozen;
-
     private void Update()
     {
         var player = Networking.LocalPlayer;
         if (player != null && player.IsUserInVR())
-        {
-            return;
-        }
-
-        if (isFrozen)
         {
             return;
         }
@@ -30,15 +23,5 @@ public class KeyEventListener : UdonSharpBehaviour
             keyboard.Toggle();
             logger.Toggle();
         }
-    }
-
-    public void Freeze()
-    {
-        isFrozen = true;
-    }
-
-    public void Unfreeze()
-    {
-        isFrozen = false;
     }
 }

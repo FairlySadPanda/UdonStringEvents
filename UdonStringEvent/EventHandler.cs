@@ -18,7 +18,7 @@ public class EventHandler : UdonSharpBehaviour
     public void Handle()
     {
         string[] e = newEvent.Split(',');
-        Debug.Log("Got an event named " + e[0] + " with payload " + newEvent + " - am owner? " + ownerOfGame);
+        Debug.Log("Got an event named " + e[0] + " with payload " + newEvent);
 
         // Event type switch. Contains both state and view events. (Too many synced strings currently will break eventually.)
         // TODO: Replace with a true event bus when network event payloads are added.

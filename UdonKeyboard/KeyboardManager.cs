@@ -125,7 +125,7 @@ public class KeyboardManager : UdonSharpBehaviour
 
         if (Networking.LocalPlayer != null && !Networking.LocalPlayer.IsUserInVR())
         {
-            logger.Toggle();
+            logScreen.Toggle();
         }
 
         gameObject.SetActive(!gameObject.activeSelf);

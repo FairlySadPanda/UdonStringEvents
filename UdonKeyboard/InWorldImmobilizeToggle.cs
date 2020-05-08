@@ -23,7 +23,6 @@ public class InWorldImmobilizeToggleKey : UdonSharpBehaviour
             }
 
             Networking.LocalPlayer.Immobilize(true);
-            keyEventListener.Freeze();
             buttonImage.color = Color.blue;
             toggle = true;
         }
@@ -37,7 +36,6 @@ public class InWorldImmobilizeToggleKey : UdonSharpBehaviour
         }
 
         buttonImage.color = Color.white;
-        keyEventListener.Unfreeze();
         toggle = false;
     }
 }

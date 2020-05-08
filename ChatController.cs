@@ -10,8 +10,8 @@ public class ChatController : UdonSharpBehaviour
 {
     ///<Summary>The text input field for this controller.</Summary>
     public InputField input;
-    ///<Summary>The manager we want to handle chat events.</Summary>
-    public EventEmissionManager manager;
+    ///<Summary>The receiver we want to handle chat events.</Summary>
+    public EventReceiver receiver;
 
     public string[] badWords;
     private int maxMessageLength;
@@ -37,7 +37,7 @@ public class ChatController : UdonSharpBehaviour
         string message = input.text;
         if (badWordsFound(message) == false)
         {
-            manager.SendEvent("ChatMessage", message.Replace(",", "|"));
+            receiver.SendEvent("ChatMessage", message.Replace(",", "|"));
         }
 
         input.text = null;

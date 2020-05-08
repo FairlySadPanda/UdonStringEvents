@@ -123,6 +123,11 @@ public class KeyboardManager : UdonSharpBehaviour
             return;
         }
 
+        if (Networking.LocalPlayer != null && !Networking.LocalPlayer.IsUserInVR())
+        {
+            logger.Toggle();
+        }
+
         gameObject.SetActive(!gameObject.activeSelf);
 
         if (gameObject.activeSelf)

@@ -15,9 +15,7 @@ public class CapsLockKey : UdonSharpBehaviour
     {
         if (toggle)
         {
-            manager.CapsOff();
-            toggle = false;
-            buttonImage.color = Color.white;
+            Deactivate();
             return;
         }
 

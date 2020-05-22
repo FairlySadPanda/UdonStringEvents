@@ -11,14 +11,11 @@ public class KeyEventListener : UdonSharpBehaviour
 
     private void Update()
     {
-        var player = Networking.LocalPlayer;
-        if (player != null && player.IsUserInVR())
-        {
-            return;
-        }
-
         if (Input.GetKeyDown(KeyCode.K))
         {
+            if (Networking.LocalPlayer?.IsUserInVR())  
+                return;
+                
             keyboard.Toggle();
         }
     }

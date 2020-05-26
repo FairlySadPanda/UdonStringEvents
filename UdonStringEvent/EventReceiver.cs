@@ -25,11 +25,15 @@ public class EventReceiver : UdonSharpBehaviour
         {
             displayName = Networking.LocalPlayer.displayName;
         }
-
     }
 
     void Update()
     {
+        if (Networking.LocalPlayer == null)
+        {
+            return;
+        }
+
         if (emitter == null)
         {
             emitter = GetEmitter(displayName);
@@ -94,7 +98,7 @@ public class EventReceiver : UdonSharpBehaviour
     {
         if (Networking.IsOwner(gameObject))
         {
-            GetEmitter("").SetCharacterName(player.displayName);
+            GetEmitter("").SetCharacter(player.playerId);
         }
     }
 
@@ -103,7 +107,11 @@ public class EventReceiver : UdonSharpBehaviour
     {
         if (Networking.IsOwner(gameObject))
         {
-            GetEmitter(player.displayName).SetCharacterName("");
+            var emitter = GetEmitter(player.displayName);
+            if (emitter != null)
+            {
+                emitter.SetCharacter(-1);
+            }
         }
     }
 

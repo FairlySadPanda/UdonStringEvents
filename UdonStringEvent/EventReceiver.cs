@@ -88,7 +88,6 @@ public class EventReceiver : UdonSharpBehaviour
         }
     }
 
-
     private void HandleUpdate(int playerID, string eventString)
     {
         handler.SetProgramVariable("playerID", playerID);

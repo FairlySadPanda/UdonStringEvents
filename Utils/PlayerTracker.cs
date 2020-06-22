@@ -36,20 +36,6 @@ public class PlayerTracker : UdonSharpBehaviour
         return players;
     }
 
-    public VRCPlayerApi GetPlayerById(int id)
-    {
-        for (int i = 0; i < players.Length; i++)
-        {
-            if (players[i] != null && players[i].playerId == id)
-            {
-                Debug.Log("Getting player API for player " + players[i].displayName);
-                return players[i];
-            }
-        }
-
-        return null;
-    }
-
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
         for (int i = 1; i < players.Length; i++)

@@ -9,6 +9,9 @@ using VRC.Udon.Common.Interfaces;
 /// <Summary>The handler of events.</Summary>
 public class EventHandler : UdonSharpBehaviour
 {
+    // The player who sent the event.
+    public int playerID;
+
     // The event that was sent.
     public string newEvent;
 

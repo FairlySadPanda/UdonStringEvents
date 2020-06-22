@@ -11,7 +11,7 @@ public class ChatEventHandler : UdonSharpBehaviour
 {
     public UdonLogger logger;
 
-    private string characterName;
+    private int playerID;
     private string newEvent;
 
     public void Handle()

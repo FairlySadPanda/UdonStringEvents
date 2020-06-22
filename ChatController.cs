@@ -104,7 +104,6 @@ public class ChatController : UdonSharpBehaviour
 
         return found;
     }
-
 }
 
 

@@ -12,6 +12,7 @@ public class KeyboardKey : UdonSharpBehaviour
     private string character;
     public KeyboardManager manager;
     public Text buttonText;
+
     public void Start()
     {
         SetLower();
@@ -31,6 +32,7 @@ public class KeyboardKey : UdonSharpBehaviour
             character = " ";
             return;
         }
+
         buttonText.text = character.ToUpper();
     }
 
@@ -43,6 +45,7 @@ public class KeyboardKey : UdonSharpBehaviour
             character = " ";
             return;
         }
+
         buttonText.text = character.ToUpper();
     }
 }

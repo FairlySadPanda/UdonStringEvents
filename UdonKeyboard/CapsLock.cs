@@ -9,27 +9,27 @@ public class CapsLockKey : UdonSharpBehaviour
 {
     public KeyboardManager manager;
     public Image buttonImage;
-    private bool toggle;
+    private bool activated;
 
     public void PressKey()
     {
-        if (toggle)
+        if (activated)
         {
             manager.CapsOff();
-            toggle = false;
+            activated = false;
             buttonImage.color = Color.white;
             return;
         }
 
         manager.CapsOn();
-        toggle = true;
+        activated = true;
         buttonImage.color = Color.blue;
     }
 
     public void Deactivate()
     {
         manager.CapsOff();
-        toggle = false;
+        activated = false;
         buttonImage.color = Color.white;
     }
 }

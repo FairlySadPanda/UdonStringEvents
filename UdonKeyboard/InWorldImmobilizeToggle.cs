@@ -10,13 +10,14 @@ public class InWorldImmobilizeToggleKey : UdonSharpBehaviour
     public InWorldKeyboardManager manager;
     public KeyEventListener keyEventListener;
     public Image buttonImage;
-    private bool toggle;
+
+    private bool activated;
 
     public void PressKey()
     {
         if (Networking.LocalPlayer != null)
         {
-            if (toggle)
+            if (activated)
             {
                 Deactivate();
                 return;
@@ -24,7 +25,7 @@ public class InWorldImmobilizeToggleKey : UdonSharpBehaviour
 
             Networking.LocalPlayer.Immobilize(true);
             buttonImage.color = Color.blue;
-            toggle = true;
+            activated = true;
         }
     }
 
@@ -36,6 +37,6 @@ public class InWorldImmobilizeToggleKey : UdonSharpBehaviour
         }
 
         buttonImage.color = Color.white;
-        toggle = false;
+        activated = false;
     }
 }

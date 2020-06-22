@@ -9,17 +9,17 @@ public class ImmobilizeToggleKey : UdonSharpBehaviour
 {
     public KeyboardManager manager;
     public Image buttonImage;
-    private bool toggle;
+    private bool activated;
 
     public void PressKey()
     {
-        if (toggle)
+        if (activated)
         {
             Deactivate();
             return;
         }
-        Activate();
 
+        Activate();
     }
 
     public void Activate()
@@ -30,7 +30,7 @@ public class ImmobilizeToggleKey : UdonSharpBehaviour
         }
 
         buttonImage.color = Color.blue;
-        toggle = true;
+        activated = true;
     }
 
     public void Deactivate()
@@ -41,6 +41,6 @@ public class ImmobilizeToggleKey : UdonSharpBehaviour
         }
 
         buttonImage.color = Color.white;
-        toggle = false;
+        activated = false;
     }
 }

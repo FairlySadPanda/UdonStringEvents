@@ -8,7 +8,6 @@ using UnityEngine.UI;
 ///<Summary>The manager for a keyboard.</Summary>
 public class InWorldKeyboardManager : UdonSharpBehaviour
 {
-    public string kName;
     ///<Summary>The input field for this keyboard.</Summary>
     public InputField input;
     ///<Summary>All the keyboard keys this keyboard has.</Summary>
@@ -98,7 +97,6 @@ public class InWorldKeyboardManager : UdonSharpBehaviour
 
     public void EnableKeyboard()
     {
-        Debug.Log(kName + " keyboard enabled");
         root.SetActive(true);
         immobilizeToggle.Deactivate();
     }
@@ -106,7 +104,6 @@ public class InWorldKeyboardManager : UdonSharpBehaviour
     ///<Summary>Toggle the keyboard on or off.</Summary>
     public void DisableKeyboard()
     {
-        Debug.Log(kName + " keyboard disabled");
         root.SetActive(false);
         immobilizeToggle.Deactivate();
     }

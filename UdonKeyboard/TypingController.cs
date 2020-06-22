@@ -14,7 +14,7 @@ public class TypingController : UdonSharpBehaviour
 
     public void Start()
     {
-        input = gameObject.GetComponent<InputField>();
+        input = GetComponent<InputField>();
     }
 
     public void Update()

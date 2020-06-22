@@ -31,7 +31,7 @@ public class KeyboardManager : UdonSharpBehaviour
 
     public void Start()
     {
-        gameObject.SetActive(false);
+        SetActive(false);
     }
 
     public void Update()
@@ -49,10 +49,10 @@ public class KeyboardManager : UdonSharpBehaviour
 
             var pos = player.GetPosition();
             pos.y = newPos;
-            gameObject.transform.position = pos;
+            transform.position = pos;
 
             // If the keyboard is active, the log screen should sit above the keyboard.
-            if (gameObject.activeSelf)
+            if (activeSelf)
             {
                 logScreen.transform.position = keyboardAnchor.transform.position;
                 logScreen.transform.rotation = keyboardAnchor.transform.rotation;
@@ -128,13 +128,13 @@ public class KeyboardManager : UdonSharpBehaviour
             logScreen.Toggle();
         }
 
-        gameObject.SetActive(!gameObject.activeSelf);
+        SetActive(!activeSelf);
 
-        if (gameObject.activeSelf)
+        if (activeSelf)
         {
             if (Networking.LocalPlayer != null)
             {
-                gameObject.transform.rotation = Networking.LocalPlayer.GetRotation();
+                transform.rotation = Networking.LocalPlayer.GetRotation();
             }
 
             logScreen.Anchor();

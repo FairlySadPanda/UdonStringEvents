@@ -13,9 +13,7 @@ public class LoggerButtons : UdonSharpBehaviour
         VRCPlayerApi player = Networking.LocalPlayer;
         if (player != null && player.IsUserInVR())
         {
-            gameObject.transform.position = player.GetBonePosition(HumanBodyBones.RightHand);
-            gameObject.transform.rotation = player.GetBoneRotation(HumanBodyBones.RightHand);
+            transform.SetPositionAndRotation(player.GetBonePosition(HumanBodyBones.RightHand), player.GetBoneRotation(HumanBodyBones.RightHand));
         }
     }
-
 }

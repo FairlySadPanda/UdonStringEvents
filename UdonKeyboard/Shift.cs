@@ -9,6 +9,7 @@ public class ShiftKey : UdonSharpBehaviour
 {
     public KeyboardManager manager;
     public Image buttonImage;
+
     private bool toggle;
 
     public void PressKey()

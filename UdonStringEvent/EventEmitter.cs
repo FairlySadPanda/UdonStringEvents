@@ -49,37 +49,4 @@ public class EventEmitter : UdonSharpBehaviour
         newEvent = $"{ownerID},{eventName},{payload},{clock}";
         clock++;
     }
-
-    /// <Summary>Get the name of the character that owns this emitter.</Summary>
-    public string GetCharacterName()
-    {
-        if (newEvent.IndexOf(",") == -1)
-        {
-            return "";
-        }
-
-        var player = VRCPlayerApi.GetPlayerById(int.Parse(newEvent.Substring(0, newEvent.IndexOf(","))));
-        if (player == null)
-        {
-            return "";
-        }
-
-        return player.displayName;
-    }
-
-    /// <Summary>Set the owner of the emitter to the provided ID.</Summary>
-    public void SetCharacter(int id)
-    {
-        if (Networking.IsOwner(gameObject))
-        {
-            if (id == -1)
-            {
-                newEvent = "";
-            }
-            else
-            {
-                newEvent = $"{id},";
-            }
-        }
-    }
 }

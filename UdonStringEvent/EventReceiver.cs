@@ -13,21 +13,14 @@ public class EventReceiver : UdonSharpBehaviour
     public UdonBehaviour handler;
 
     private int clock;
-    private string displayName;
     private EventEmitter emitter;
 
     public void Start()
     {
         clock = 0;
-        displayName = "";
-
-        if (Networking.LocalPlayer != null)
-        {
-            displayName = Networking.LocalPlayer.displayName;
-        }
     }
 
-    void Update()
+    public void Update()
     {
         if (Networking.LocalPlayer == null)
         {
@@ -36,15 +29,7 @@ public class EventReceiver : UdonSharpBehaviour
 
         if (emitter == null)
         {
-            emitter = GetEmitter(displayName);
-
-            if (emitter != null)
-            {
-                Debug.Log("Emitter object has arrived in our care.");
-                Networking.SetOwner(Networking.LocalPlayer, emitter.gameObject);
-            }
-
-            //TODO: If gotemitter is false for a long time (5 seconds?) panic and alert the receiver that a reallocation has to happen.
+            emitter = GetEmitter(Networking.LocalPlayer.playerId);
         }
 
         foreach (var emitter in emitters)
@@ -53,7 +38,7 @@ public class EventReceiver : UdonSharpBehaviour
             // GetNewEvent returns either a nil event (empty string) or an event.
             if (newEv != "")
             {
-                HandleUpdate(emitter.GetCharacterName(), newEv);
+                HandleUpdate(Networking.GetOwner(emitter.gameObject).playerId, newEv);
             }
         }
     }
@@ -80,11 +65,12 @@ public class EventReceiver : UdonSharpBehaviour
         emitter.SetNewEvent(eventName, eventPayload);
     }
 
-    private EventEmitter GetEmitter(string name)
+    private EventEmitter GetEmitter(int id)
     {
         foreach (var possibleEmitter in emitters)
         {
-            if (possibleEmitter.GetCharacterName() == name)
+            // Don't re-allocate our own emitter away.
+            if (Networking.GetOwner(possibleEmitter.gameObject).playerId == id && possibleEmitter != emitter)
             {
                 return possibleEmitter;
             }
@@ -98,26 +84,14 @@ public class EventReceiver : UdonSharpBehaviour
     {
         if (Networking.IsOwner(gameObject))
         {
-            GetEmitter("").SetCharacter(player.playerId);
+            Networking.SetOwner(player, GetEmitter(Networking.LocalPlayer.playerId).gameObject);
         }
     }
 
-    /// <Summary>Get the player's emitter and assign it to nobody.</Summary>
-    public override void OnPlayerLeft(VRCPlayerApi player)
-    {
-        if (Networking.IsOwner(gameObject))
-        {
-            var emitter = GetEmitter(player.displayName);
-            if (emitter != null)
-            {
-                emitter.SetCharacter(-1);
-            }
-        }
-    }
 
-    private void HandleUpdate(string characterName, string eventString)
+    private void HandleUpdate(int playerID, string eventString)
     {
-        handler.SetProgramVariable("characterName", characterName);
+        handler.SetProgramVariable("playerID", playerID);
         handler.SetProgramVariable("newEvent", eventString);
         handler.SendCustomEvent("Handle");
     }

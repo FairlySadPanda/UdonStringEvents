@@ -1,3 +1,9 @@
+Notice on Deprecation:
+
+This prefab will be deprecated reasonably soon. Currently I am waiting on the incoming Udon networking upgrade that will feature features that are transformative to this area of VRChat. USEv2, which will replace this, will be dramatically more reliable, scalable and easier to use.
+
+When this repo is deprecated, the link to its replacement will be placed here.
+
 # UdonStringEvents
 
 A system by which complex events can be sent over the network in Udon for VRChat. Written in U#.
